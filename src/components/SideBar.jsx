@@ -8,9 +8,11 @@ import CloudQueueIcon from '@material-ui/icons/CloudQueue';
 import styled from 'styled-components';
 import { Modal } from '@material-ui/core';
 import { useState } from 'preact/hooks';
-
+import { db, storage } from '../firebase';
+import {ref,uploadBytes} from "firebase/storage"
 const SidebarContainer = styled.div`
     width:300px;
+    padding: 0 10px;
     padding-top: 10px;
     height:100%;
 `
@@ -122,24 +124,28 @@ const Sidebar = () => {
     const handleFile = e => {
         if(e.target.files[0]) {
             setFile(e.target.files[0])
+            console.log(file);
         }
     }
 
     const handleUpload = e => {
         e.preventDefault()
         setUploading(true)
-        storage.ref(`files/${file.name}`).put(file).then(snapshot => {
-            storage.ref("files").child(file.name).getDownloadURL().then(url => {
-                db.collection("myfiles").add({
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    filename: file.name,
-                    fileURL: url,
-                    size: snapshot._delegate.bytesTransferred
-                })
-                setUploading(false)
-                setFile(null)
-                setOpen(false)
-            })
+        // storage.ref(`files/${file.name}`).put(file).then(snapshot => {
+        //     storage.ref("files").child(file.name).getDownloadURL().then(url => {
+        //         db.collection("myfiles").add({
+        //             filename: file.name,
+        //             fileURL: url,
+        //             size: snapshot._delegate.bytesTransferred
+        //         })
+        //         setUploading(false)
+        //         setFile(null)
+        //         setOpen(false)
+        //     })
+        // })
+        const storageRef=ref(storage,'uploads/'+file.name);
+        uploadBytes(storageRef,file).then(snapshot=>{
+            console.log("uploaded file");
         })
     }
 

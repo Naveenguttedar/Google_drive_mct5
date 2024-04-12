@@ -5,7 +5,8 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import styled from 'styled-components';
 import { useEffect, useState } from 'preact/hooks';
-
+import { db } from '../firebase';
+import { collection,getDocs } from 'firebase/firestore';
 const DataContainer = styled.div`
     flex: 1 1;
     padding: 12px 20px;
@@ -77,7 +78,6 @@ const DataListRow = styled.div`
 
 const Data = () => {
     const [files, setFiles] = useState([]);
-
     // useEffect(() => {
     //     db.collection("myfiles").onSnapshot(snapshot => {
     //         setFiles(snapshot.docs.map(doc => ({
@@ -85,8 +85,9 @@ const Data = () => {
     //             data: doc.data()
     //         })))
     //     })
+    //
     // },[])
-
+    //
     const changeBytes = (bytes, decimals = 2) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -116,6 +117,10 @@ const Data = () => {
                             <p>{file.data.filename}</p>
                         </DataFile>
                     ))}
+                        <DataFile >
+                            <InsertDriveFileIcon />
+                            <p>emoji.js</p>
+                        </DataFile>
                 </DataGrid>
                 <div>
                     <DataListRow>

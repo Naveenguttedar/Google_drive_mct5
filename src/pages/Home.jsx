@@ -1,5 +1,10 @@
 import styled from 'styled-components'
+import {route} from "preact-router"
 export default function Home() {
+    const navigate = path => {
+    route(`/${path}`, true);
+  };
+
   return (
     <Container>
       <Row1>
@@ -15,7 +20,7 @@ export default function Home() {
       <Row2>
         <img src="https://www.google.com/drive/static/images/drive/logo-drive.png" />
         <div>A safe place for all your files</div>
-        <Button>Go to Google Drive</Button>
+        <Button onClick={()=>navigate('mydrive')}>Go to Google Drive</Button>
       </Row2>
     </Container>)
 }
