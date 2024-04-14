@@ -2,10 +2,10 @@ import Header from '../components/Header'
 import SideBar from '../components/SideBar'
 import Data from '../components/Data'
 import styled from 'styled-components'
-export default function Drive() {
+export default function Drive({user}) {
   return (
     <Container>
-      <Header />
+      <Header photoURL={user.photoURl} />
       <Main>
       <SideBar/>
       <Data/>

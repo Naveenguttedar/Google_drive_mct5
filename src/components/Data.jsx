@@ -6,7 +6,6 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import styled from 'styled-components';
 import { useEffect, useState } from 'preact/hooks';
 import { db } from '../firebase';
-import { collection,getDocs } from 'firebase/firestore';
 const DataContainer = styled.div`
     flex: 1 1;
     padding: 12px 20px;
@@ -56,9 +55,9 @@ const DataFile = styled.div`
     }
 `
 const DataListRow = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns:repeat(3,1fr);
     align-items: center;
-    justify-content: space-between;
     border-bottom: 1px solid #ccc;
     padding: 10px;
     p {
@@ -75,19 +74,17 @@ const DataListRow = styled.div`
         }
     }
 `
-
 const Data = () => {
     const [files, setFiles] = useState([]);
-    // useEffect(() => {
-    //     db.collection("myfiles").onSnapshot(snapshot => {
-    //         setFiles(snapshot.docs.map(doc => ({
-    //             id: doc.id,
-    //             data: doc.data()
-    //         })))
-    //     })
-    //
-    // },[])
-    //
+    useEffect(() => {
+        db.collection("myfiles").onSnapshot(snapshot => {
+            setFiles(snapshot.docs.map(doc => ({
+                id: doc.id,
+                data: doc.data()
+            })))
+        })
+    }, [])
+
     const changeBytes = (bytes, decimals = 2) => {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -96,7 +93,7 @@ const Data = () => {
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
-    
+
     return (
         <DataContainer>
             <DataHeader>
@@ -117,10 +114,6 @@ const Data = () => {
                             <p>{file.data.filename}</p>
                         </DataFile>
                     ))}
-                        <DataFile >
-                            <InsertDriveFileIcon />
-                            <p>emoji.js</p>
-                        </DataFile>
                 </DataGrid>
                 <div>
                     <DataListRow>
@@ -135,8 +128,8 @@ const Data = () => {
                                 <p><InsertDriveFileIcon /> {file.data.filename}</p>
                             </a>
                             <p>Owner </p>
-                            <p>{new Date(file.data.timestamp?.seconds*1000).toUTCString()}</p>
-                            <p>{changeBytes(file.data.size)}</p>
+                            <p>{new Date(file.data.timestamp?.seconds * 1000).toUTCString()}</p>
+                            <p>{changeBytes(file.data?.size)}</p>
                         </DataListRow>
                     ))}
                 </div>
